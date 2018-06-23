@@ -1,9 +1,12 @@
 package it.polito.tdp.formulaone;
 
 import java.net.URL;
+import java.time.Year;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.formulaone.model.Driver;
 import it.polito.tdp.formulaone.model.Model;
+import it.polito.tdp.formulaone.model.Season;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -21,7 +24,7 @@ public class FormulaOneController {
     private URL location;
 
     @FXML
-    private ComboBox<?> boxAnno;
+    private ComboBox<Season> boxAnno;
 
     @FXML
     private TextField textInputK;
@@ -31,11 +34,24 @@ public class FormulaOneController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	
+    		Year year = boxAnno.getValue().getYear();
+    		model.creaGrafo(year);
+    		txtResult.appendText(model.getVincente().getForename()+ " "+model.getVincente().getSurname());
 
     }
 
     @FXML
     void doTrovaDreamTeam(ActionEvent event) {
+    		txtResult.clear();
+    		Year year = boxAnno.getValue().getYear();
+    		String result = "";
+    		int dimensione = Integer.parseInt(textInputK.getText());
+    		for(Driver d: model.calcolaDreamTeam(dimensione)) {
+    			result += d.toString();
+    		}
+    		result = result.trim();
+    		txtResult.appendText(result);
 
     }
 
@@ -49,5 +65,6 @@ public class FormulaOneController {
     
     public void setModel(Model model){
     	this.model = model;
+    	boxAnno.getItems().addAll(model.getSeasons());
     }
 }
